@@ -1,7 +1,5 @@
-# coding = utf-8
 from Crypto.Cipher import AES
 import base64
-import requests
 
 first_param = '{rid:"", offset:"0", total:"true", limit:"80", csrf_token:""}'
 second_param = "010001"
@@ -24,14 +22,10 @@ def get_encSecKey():
 
 
 def AES_encrypt(text, key, iv):
-    if type(text) == type(b'123'):  # 这是判断当前变量的类型是bytes还是字符串，因为pycryptodome要
-        # 求参数要是字节类型
-
+    if type(text) == type(b'123'):  # 这是判断当前变量的类型是bytes还是字符串，因为pycryptodome要求参数要是字节类型
         text = text.decode('utf-8')
 
-    pad = 16 - len(text) % 16  # 了解这个加密算法的人应该知道，加密的位数是16的位数，不够的话
-    # 进行不上，我也不了解这个算法，有兴趣的可以上网查查
-
+    pad = 16 - len(text) % 16  # 加密的位数是16的位数
     text = text + pad * chr(pad)
 
     iv = iv.encode('utf-8')
@@ -43,25 +37,10 @@ def AES_encrypt(text, key, iv):
     return encrypt_text
 
 
-if __name__ == "__main__":
+def run():
     params = get_params()
     encSecKey = get_encSecKey()
-    print((params).decode('utf-8'))
-    print(encSecKey)
 
-    base_url = 'https://music.163.com/weapi/v1/resource/comments/R_SO_4_1332514589?csrf_token='
+    return params, encSecKey
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
-        'Referer': 'https://music.163.com/',
-        'Host': 'music.163.com',
-        'Upgrade-Insecure-Requests': '1',
-    }
-    data = {
-        'params': params,
-        'encSecKey': encSecKey
-    }
-    response = requests.post(base_url, headers=headers, data=data)
-    print(response.text)
-    with open('xxx.json', 'w', encoding='utf-8') as f:
-        f.write(response.text)
+

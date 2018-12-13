@@ -22,7 +22,7 @@ class YunSpider:
     def send_request(self):
         response = requests.get(self.base_url, headers=self.headers, timeout=60)
         data = response.text
-
+        print(data)
         return data
 
     def save_file(self, data):
@@ -36,11 +36,12 @@ class YunSpider:
         res_json_list = json.loads(res_json_list)
         res_dict = {}
         for res_json in res_json_list:
-            res_dict['id'] = res_json.get('album').get('id')
-            print('id', res_json.get('album').get('id'))
 
-            res_dict['music_name'] = res_json.get('album').get('name')
-            print('歌名:', res_json.get('album').get('name'))
+            res_dict['music_detail'] = 'https://music.163.com/weapi/v1/resource/comments/{}?csrf_token='.format(res_json.get('commentThreadId'))
+            print('music_detail', res_json.get('commentThreadId'))
+
+            res_dict['music_name'] = res_json.get('name')
+            print('歌名:', res_json.get('name'))
 
             res_dict['name'] = res_json.get('artists')[0].get('name')
             print('歌手:', res_json.get('artists')[0].get('name'))
